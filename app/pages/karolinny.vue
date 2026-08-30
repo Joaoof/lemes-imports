@@ -2,14 +2,14 @@
 /*  ==========================================================================
     LINK NA BIO  —  BY KAROLINNY  (MODA FEMININA)
 
-    Mesmo pattern da home da Lemes (header, carrossel de destaques, CTA no
-    WhatsApp, lista compacta do catalogo), mas em paleta cream + tipografia
-    serifada pra bater com a marca. Botao de Grupo VIP entra ao lado do
-    WhatsApp: sao os dois caminhos de conversa.
+    Mesmo pattern da home da Lemes, adaptado em paleta cream/nude/preto e
+    tipografia Poppins (mesma fonte do resto do app). Dois caminhos de
+    conversa: WhatsApp direto e Grupo VIP.
 
-    Ainda sem dados reais: os slots de produto ficam neutros (sem foto
-    escrita) ate a Karolinny mandar as fotos e precos. Trocar tambem `zap`
-    e `grupoVip` pelos links reais.
+    Fotos vem do Unsplash (uso comercial ok pela licenca deles) so pra
+    povoar a vitrine ate a Karolinny mandar as pecas dela. Trocar `zap` e
+    `grupoVip` pelos links reais. Preco nao aparece: cada card manda a
+    conversa pro WhatsApp com o codigo do item ja escrito.
     ==========================================================================  */
 
 useHead({
@@ -17,7 +17,7 @@ useHead({
     link: [
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
-        { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" }
+        { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" }
     ],
     meta: [
         { name: "description", content: "By Karolinny — moda feminina, peças novas toda semana. Compre pelo WhatsApp." },
@@ -27,31 +27,53 @@ useHead({
 
 useColorMode().preference = "light"
 
-/*  Placeholders  —  a Karolinny troca pelos links reais dela.  */
 const zap = "#"
 const grupoVip = "#"
 const arroba = "by.karolinny"
 
-/*  Slots vazios ate ter foto e preco reais. 4 destaques + 4 no catalogo
-    completo (o mesmo split que a home da Lemes usa).  */
-const destaques = Array.from({ length: 4 }, (_, i) => ({ id: `d${i}` }))
-const restante  = Array.from({ length: 4 }, (_, i) => ({ id: `r${i}` }))
+/*  Fotos Unsplash direto. Redimensionadas na URL para servir so o que o
+    card precisa (economiza dado no 3G).  */
+function foto(id: string, w: number, h: number) {
+    return `https://images.unsplash.com/${id}?w=${w}&h=${h}&fit=crop&auto=format&q=80`
+}
+
+const destaques = [
+    { id: "photo-1525507119028-ed4c629a60a3", codigo: "K01" },
+    { id: "photo-1532453288672-3a27e9be9efd", codigo: "K02" },
+    { id: "photo-1558769132-cb1aea458c5e", codigo: "K03" },
+    { id: "photo-1567401893414-76b7b1e5a7a5", codigo: "K04" }
+]
+
+const restante = [
+    { id: "photo-1540221652346-e5dd6b50f3e7", codigo: "K05" },
+    { id: "photo-1490481651871-ab68de25d43d", codigo: "K06" },
+    { id: "photo-1603400521630-9f2de124b33b", codigo: "K07" },
+    { id: "photo-1555529771-835f59fc5efe",  codigo: "K08" }
+]
+
+function pedir(codigo: string) {
+    if (zap === "#") return "#"
+    const msg = encodeURIComponent(`Oi Karolinny! Tenho interesse no item ${codigo}`)
+    return `${zap}?text=${msg}`
+}
 </script>
 
 <template>
     <div class="karolinny min-h-dvh bg-[#EFE7DA] text-[#2A211B]">
         <div class="mx-auto w-full max-w-[540px] pb-16 pt-8">
 
-            <!--  Marca  -->
+            <!--  Marca  —  logo grande e centralizada, ocupando bem a largura
+                  do container. E wordmark, entao horizontal fica melhor que
+                  cortado em avatar.  -->
             <header class="px-5">
                 <img
                     src="/karolinny/logo.png"
                     alt="By Karolinny — Moda Feminina"
-                    class="sobe h-16 w-auto max-w-[260px] object-contain object-left"
+                    class="sobe mx-auto h-auto w-full max-w-[420px]"
                 >
 
-                <div class="sobe mt-4 flex flex-wrap items-baseline gap-x-2.5 gap-y-1" style="--atraso:40ms">
-                    <h1 class="text-[19px] font-serif-display leading-tight text-[#2A211B]">
+                <div class="sobe mt-6 flex flex-wrap items-baseline justify-center gap-x-2.5 gap-y-1" style="--atraso:40ms">
+                    <h1 class="text-[19px] font-semibold leading-tight text-[#2A211B]">
                         Coleção nova toda semana
                     </h1>
                     <a
@@ -62,43 +84,50 @@ const restante  = Array.from({ length: 4 }, (_, i) => ({ id: `r${i}` }))
                     >@{{ arroba }}</a>
                 </div>
 
-                <p class="sobe mt-2 text-[13.5px] leading-relaxed text-[#7A6E5D]" style="--atraso:70ms">
+                <p class="sobe mt-2 text-center text-[13.5px] leading-relaxed text-[#7A6E5D]" style="--atraso:70ms">
                     Envio pra todo Brasil · Pix ou cartão em até 6x
                 </p>
             </header>
 
-            <!--  Carrossel de destaques. Snap horizontal igual a Lemes.  -->
-            <section v-if="destaques.length" class="mt-7">
+            <!--  Carrossel de destaques.  -->
+            <section class="mt-7">
                 <h2 class="etiqueta mb-3 px-5 text-[#8B7B67]">
                     Novidades
                 </h2>
 
                 <div class="flex snap-x snap-mandatory scroll-pl-5 gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    <div
+                    <a
                         v-for="(produto, i) in destaques"
-                        :key="produto.id"
+                        :key="produto.codigo"
+                        :href="pedir(produto.codigo)"
+                        target="_blank"
+                        rel="noopener"
                         class="botao sobe w-[212px] shrink-0 snap-start overflow-hidden rounded-2xl bg-white shadow-[0_1px_2px_rgba(42,33,27,0.04)]"
                         :style="`--atraso:${100 + i * 50}ms`"
                     >
-                        <div class="aspect-[4/5] w-full bg-[#E5DDCC] grid place-items-center">
-                            <UIcon name="i-fa6-solid-shirt" class="text-3xl text-[#C9A96E]/50" />
+                        <div class="aspect-[4/5] w-full bg-[#E5DDCC]">
+                            <img
+                                :src="foto(produto.id, 600, 750)"
+                                :alt="`Peça ${produto.codigo}`"
+                                loading="lazy"
+                                class="h-full w-full object-cover"
+                            >
                         </div>
-                        <div class="p-3.5">
-                            <p class="line-clamp-1 text-[13.5px] font-medium text-[#2A211B]/80">
-                                em breve
+                        <div class="flex items-center justify-between p-3.5">
+                            <p class="text-[13px] tracking-wide text-[#8B7B67]">
+                                {{ produto.codigo }}
                             </p>
-                            <p class="mt-1 text-[13px] font-serif-display italic text-[#B08968]">
-                                fotos chegando
+                            <p class="text-[12px] font-medium text-[#2A211B]">
+                                Ver preço →
                             </p>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </section>
 
-            <!--  Os dois caminhos de conversa. WhatsApp direto = o botao
-                  primario (quem chega ja quer comprar). Grupo VIP = escala
-                  de retorno (novidade, promocao). Empilhados: quem so quer
-                  falar nao precisa procurar entre outros CTAs.  -->
+            <!--  Os dois botoes de conversa. WhatsApp = comprar agora,
+                  Grupo VIP = ficar por dentro. WhatsApp fica em cima porque
+                  quem chega ja quer falar.  -->
             <div class="mt-5 space-y-2.5 px-5">
                 <a
                     :href="zap"
@@ -123,35 +152,42 @@ const restante  = Array.from({ length: 4 }, (_, i) => ({ id: `r${i}` }))
                 </a>
             </div>
 
-            <!--  Lista compacta  —  o restante do catalogo. Formato horizontal
-                  ganha densidade sem virar grid.  -->
-            <section v-if="restante.length" class="mt-9 px-5">
+            <!--  Lista compacta  —  o resto do catalogo.  -->
+            <section class="mt-9 px-5">
                 <h2 class="etiqueta mb-3 text-[#8B7B67]">
                     Coleção completa
                 </h2>
 
                 <div class="space-y-2.5">
-                    <div
+                    <a
                         v-for="(produto, i) in restante"
-                        :key="produto.id"
+                        :key="produto.codigo"
+                        :href="pedir(produto.codigo)"
+                        target="_blank"
+                        rel="noopener"
                         class="botao sobe flex items-center gap-3.5 rounded-2xl bg-white p-3 shadow-[0_1px_2px_rgba(42,33,27,0.04)]"
                         :style="`--atraso:${i * 40}ms`"
                     >
-                        <div class="grid h-[62px] w-[62px] shrink-0 place-items-center overflow-hidden rounded-xl bg-[#E5DDCC]">
-                            <UIcon name="i-fa6-solid-shirt" class="text-lg text-[#C9A96E]/60" />
+                        <div class="h-[62px] w-[62px] shrink-0 overflow-hidden rounded-xl bg-[#E5DDCC]">
+                            <img
+                                :src="foto(produto.id, 124, 124)"
+                                :alt="`Peça ${produto.codigo}`"
+                                loading="lazy"
+                                class="h-full w-full object-cover"
+                            >
                         </div>
 
                         <div class="min-w-0 grow">
-                            <p class="truncate text-[15px] font-medium text-[#2A211B]/80">
-                                em breve
+                            <p class="text-[15px] font-semibold text-[#2A211B]">
+                                Peça {{ produto.codigo }}
                             </p>
-                            <p class="mt-1 text-[13px] font-serif-display italic text-[#B08968]">
-                                fotos chegando
+                            <p class="mt-0.5 text-[12.5px] text-[#8B7B67]">
+                                Ver preço no WhatsApp
                             </p>
                         </div>
 
-                        <UIcon name="i-fa6-solid-chevron-right" class="text-xs text-[#8B7B67]/40" />
-                    </div>
+                        <UIcon name="i-fa6-solid-chevron-right" class="text-xs text-[#8B7B67]/50" />
+                    </a>
                 </div>
             </section>
         </div>
@@ -159,6 +195,5 @@ const restante  = Array.from({ length: 4 }, (_, i) => ({ id: `r${i}` }))
 </template>
 
 <style scoped>
-.karolinny { font-family: "Inter", ui-sans-serif, system-ui, sans-serif }
-.font-serif-display { font-family: "Cormorant Garamond", ui-serif, Georgia, serif }
+.karolinny { font-family: "Poppins", ui-sans-serif, system-ui, sans-serif }
 </style>

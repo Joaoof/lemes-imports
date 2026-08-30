@@ -1,0 +1,167 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+/*  ==========================================================================
+    DESIGN TOKENS  —  LEMES IMPORTS
+
+    A paleta e escura com laranja porque e a marca dela: o logo e um
+    wordmark em degrade laranja sobre preto. Isso vem do briefing, nao de
+    escolha minha.
+
+    A distincao, entao, tem que vir de estrutura e tipografia  —  e vem da
+    tabela de precos. E isso que uma loja de importados manda no WhatsApp:
+    item a esquerda, valor a direita, atualizada em tal data. A pagina e
+    essa tabela, nao uma arvore de links.
+    ==========================================================================  */
+@theme static {
+    --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+    --font-dado: "IBM Plex Mono", ui-monospace, monospace;
+
+    /*  Laranja da marca. O 400 sobre o preto da 9.1:1  —  folgado em AA
+        ate para texto pequeno.  */
+    --color-fogo-50:  #FFF3E6;
+    --color-fogo-100: #FFE0C2;
+    --color-fogo-200: #FFC08A;
+    --color-fogo-300: #FFA23A;
+    --color-fogo-400: #FB8C1B;
+    --color-fogo-500: #F97316;
+    --color-fogo-600: #DD5C06;
+    --color-fogo-700: #B24705;
+    --color-fogo-800: #8C3A08;
+    --color-fogo-900: #70300A;
+    --color-fogo-950: #3D1704;
+
+    --color-tinta:  #0A0A0B;   /*  pagina                                 */
+    --color-papel:  #131316;   /*  linhas e superficies                   */
+    --color-risco:  #26262C;   /*  filetes e pontilhado                   */
+    --color-cinza:  #8E8E98;   /*  apoio  —  6.8:1 sobre a tinta          */
+    --color-zap:    #25D366;
+
+    --ease-suave: cubic-bezier(.16, 1, .3, 1);
+}
+
+@layer base {
+    body {
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        background: var(--color-tinta);
+        color: #fff;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-fogo-300);
+        outline-offset: 3px;
+        border-radius: 8px;
+    }
+}
+
+/*  ==========================================================================
+    O WORDMARK
+    Degrade laranja no texto, como no logo. Usado so quando ainda nao ha
+    logo enviado  —  depois disso a imagem dela ocupa esse lugar.
+    ==========================================================================  */
+@utility marca {
+    background: linear-gradient(98deg, var(--color-fogo-500) 6%, var(--color-fogo-300) 94%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+}
+
+/*  Numeros sempre em mono e com largura fixa: numa tabela de precos as
+    virgulas precisam cair na mesma coluna.  */
+@utility valor {
+    font-family: var(--font-dado);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+}
+
+@utility etiqueta {
+    font-family: var(--font-dado);
+    font-size: .6875rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+/*  ==========================================================================
+    ASSINATURA  —  A LINHA CONDUTORA
+
+    O pontilhado que corre do nome do produto ate o preco. E o gesto de
+    cardapio e de catalogo de pecas, e e o que faz a pagina ler como
+    tabela de precos em vez de vitrine.
+    ==========================================================================  */
+.condutor {
+    flex: 1 1 auto;
+    min-width: 1.5rem;
+    height: 1px;
+    align-self: flex-end;
+    margin-bottom: .42em;
+    background-image: radial-gradient(circle, var(--color-risco) 1px, transparent 1px);
+    background-size: 7px 1px;
+    background-repeat: repeat-x;
+    background-position: left center;
+}
+
+/*  ==========================================================================
+    MICROINTERACOES
+    Discretas: a lista e longa e o polegar passa rapido. So o toque
+    responde, e o hover so existe em quem tem cursor.
+    ==========================================================================  */
+.linha {
+    transition: background-color .2s var(--ease-suave);
+}
+
+.linha:active {
+    background-color: var(--color-papel);
+}
+
+.botao {
+    transition: transform .16s var(--ease-suave), background-color .16s var(--ease-suave), border-color .16s var(--ease-suave), opacity .16s var(--ease-suave);
+}
+
+.botao:active {
+    transform: scale(.98);
+}
+
+@media (hover: hover) {
+    .linha:hover {
+        background-color: var(--color-papel);
+    }
+
+    .botao:hover {
+        transform: translateY(-1px);
+    }
+}
+
+/*  ==========================================================================
+    ENTRADA
+    Uma sequencia so, no carregamento. Nada de revelar na rolagem: a
+    pagina e curta e o efeito extra e justamente o que denuncia template.
+    ==========================================================================  */
+@keyframes sobe {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.sobe {
+    animation: sobe .5s var(--ease-suave) both;
+    animation-delay: var(--atraso, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sobe {
+        animation: none;
+    }
+
+    .botao:hover,
+    .botao:active {
+        transform: none;
+    }
+}

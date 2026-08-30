@@ -144,11 +144,11 @@ function pedir(codigo: string) {
                     :href="grupoVip"
                     target="_blank"
                     rel="noopener"
-                    class="botao sobe flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#2A211B]/25 bg-white/60 py-3.5 text-[15px] font-semibold text-[#2A211B] backdrop-blur"
+                    class="vip botao sobe relative flex w-full items-center justify-center gap-2.5 overflow-hidden rounded-xl py-3.5 text-[15px] font-bold text-[#2A211B]"
                     style="--atraso:340ms"
                 >
-                    <UIcon name="i-fa6-solid-star" class="text-sm text-[#B08968]" />
-                    Grupo VIP — novidades primeiro
+                    <UIcon name="i-fa6-solid-star" class="text-sm text-[#2A211B]" />
+                    Grupo VIP — acesso exclusivo
                 </a>
             </div>
 
@@ -196,4 +196,60 @@ function pedir(codigo: string) {
 
 <style scoped>
 .karolinny { font-family: "Poppins", ui-sans-serif, system-ui, sans-serif }
+
+/*  BOTAO VIP  —  dourado com sweep de brilho e halo pulsando.
+
+    Fundo em gradiente ouro-champagne pra dar peso de "premium" sem
+    virar dourado saturado de banner (que sim, tem cara de anuncio de
+    joia falsa). O sweep passa em 2.4s, o glow em 2s: descompassados de
+    proposito, para nao virar um pisca-pisca sincronizado.  */
+.vip {
+    background:
+        linear-gradient(120deg, #C9A96E 0%, #E8CFA0 45%, #C9A96E 100%);
+    box-shadow:
+        0 0 0 1px rgba(139, 106, 78, 0.3),
+        0 6px 20px -6px rgba(201, 169, 110, 0.55),
+        0 12px 32px -12px rgba(201, 169, 110, 0.35);
+    animation: vip-halo 2s ease-in-out infinite;
+}
+
+.vip::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        100deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.55) 50%,
+        transparent 70%
+    );
+    transform: translateX(-100%);
+    animation: vip-brilho 2.4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes vip-brilho {
+    0%       { transform: translateX(-100%); }
+    60%, 100% { transform: translateX(100%); }
+}
+
+@keyframes vip-halo {
+    0%, 100% {
+        box-shadow:
+            0 0 0 1px rgba(139, 106, 78, 0.3),
+            0 6px 20px -6px rgba(201, 169, 110, 0.55),
+            0 12px 32px -12px rgba(201, 169, 110, 0.35);
+    }
+    50% {
+        box-shadow:
+            0 0 0 1px rgba(139, 106, 78, 0.45),
+            0 8px 28px -6px rgba(201, 169, 110, 0.85),
+            0 16px 40px -12px rgba(201, 169, 110, 0.55);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vip,
+    .vip::before { animation: none; }
+}
 </style>
